@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import shortid from "shortid";
-
 import ContactList from "./Components/ContactList/ContactList";
 import ContactForm from "./Components/ContactForm/ContactForm";
 import Filter from "./Components/Filter/Filter";
+import { SpanNoContactsMsg } from "./App.styled";
 
 class App extends Component {
   state = {
@@ -16,11 +16,11 @@ class App extends Component {
     filter: "",
   };
 
-  addNewContact = (newContactName) => {
+  addNewContact = (newItem) => {
     const contact = {
       id: shortid.generate(),
-      name: newContactName.name,
-      number: newContactName.number,
+      name: newItem.name,
+      number: newItem.number,
     };
 
     this.setState((prevState) => ({
@@ -34,7 +34,7 @@ class App extends Component {
     });
   };
 
-  removeContact = (name) => {
+  deleteContact = (name) => {
     this.setState((prevState) => ({
       contacts: prevState.contacts.filter((pers) => pers.name !== name),
     }));
@@ -55,10 +55,14 @@ class App extends Component {
         />
         <h2>Contacts</h2>
         <Filter filter={this.state.filter} onFilter={this.findFilterValue} />
-        <ContactList
-          contacts={filterCurrentTel}
-          onDeleteContact={this.removeContact}
-        />
+        {this.state.contacts.length === 0 ? (
+          <SpanNoContactsMsg> No contacts</SpanNoContactsMsg>
+        ) : (
+          <ContactList
+            contacts={filterCurrentTel}
+            onDeleteContact={this.deleteContact}
+          />
+        )}
       </div>
     );
   }
